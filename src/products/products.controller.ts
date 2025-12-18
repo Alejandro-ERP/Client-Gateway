@@ -23,7 +23,6 @@ export class ProductsController {
 
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
-    console.log('Creating product:', createProductDto);
     return this.productsClient.send(
       { cmd: 'create_product' },
       createProductDto,

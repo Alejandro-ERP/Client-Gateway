@@ -1,9 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { RpcCustomExceptionFilter } from './common/rpc-custom-exception.filter';
+import { envConfig } from './config/envs';
 
 async function bootstrap() {
+  const logger= new Logger('Main-Client-Gateway');
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api');
@@ -16,6 +18,8 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new RpcCustomExceptionFilter());
   
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(envConfig.port);
+  logger.log(`Application is running on port: ${envConfig.port}`);
+
 }
 bootstrap();
