@@ -4,12 +4,14 @@ import * as joi from 'joi';
 const validateEnv = joi
   .object({
     PORT: joi.number().required(),
-    ORDERS_MICROSERVICE_PORT: joi.number().required(),
-    ORDERS_MICROSERVICE_HOST: joi.string().required(),
+    NATS_SERVERS: joi.array().items(joi.string()).required(),
   })
   .unknown(true);
 
-const { error, value: envVars } = validateEnv.validate(process.env);
+const { error, value: envVars } = validateEnv.validate({
+  ...process.env,
+  NATS_SERVERS: process.env.NATS_SERVERS?.split(','),
+});
 
 if (error) {
   throw new Error(`Config validation error: ${error.message}`);
@@ -17,8 +19,5 @@ if (error) {
 
 export const envConfig = {
   port: envVars.PORT,
-  ordersMicroservice: {
-    host: envVars.ORDERS_MICROSERVICE_HOST,
-    port: envVars.ORDERS_MICROSERVICE_PORT,
-  },
+  natsServers: envVars.NATS_SERVERS,
 };

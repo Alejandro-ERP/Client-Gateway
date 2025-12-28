@@ -21,12 +21,16 @@ export class OrdersController {
 
   @Post()
   create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersClient.send('createOrder', { ...createOrderDto });
+    return this.ordersClient.send('createOrder', createOrderDto);
   }
 
   @Get()
   findAll(@Query() paginationDto: PaginationDto) {
-    return this.ordersClient.send('findAllOrders', paginationDto);
+    return this.ordersClient.send('findAllOrders', paginationDto).pipe(
+      catchError((error) => {
+        throw new RpcException(error);
+      }),
+    );
   }
 
   @Get(':id')
