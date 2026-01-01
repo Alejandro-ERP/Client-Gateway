@@ -9,7 +9,4 @@ export class OrderItemDto {
   @IsNumber()
   quantity: number;
 
-  @IsPositive()
-  @IsNumber()
-  price: number;
 }
